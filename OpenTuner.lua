@@ -38,7 +38,9 @@ function toggleTunerTrack()
     reaper.TrackFX_Show(track, 0, 3)
     reaper.SetCursorContext(0, null)
   end
-  reaper.SetMediaTrackInfo_Value(track, "I_RECARM", 1) -- record arm
+  -- we record arm here, because if we're refloating the window, there's a chance
+  -- some other operation has unarmed the track
+  reaper.SetMediaTrackInfo_Value(track, "I_RECARM", 1)
 end
 
 reaper.Undo_BeginBlock()
