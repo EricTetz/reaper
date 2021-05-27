@@ -27,20 +27,19 @@ end
 
 function toggleTunerTrack()
   local track = findTunerTrack()
-  if track then
-    if reaper.TrackFX_GetFloatingWindow(track, 0) then
-       reaper.DeleteTrack(track)
-       return
-    end
-    reaper.TrackFX_Show(track, 0, 3)
-  else
+  if not track then
     track = createTunerTrack()
-    reaper.TrackFX_Show(track, 0, 3)
-    reaper.SetCursorContext(0, null)
+  elseif reaper.TrackFX_GetFloatingWindow(track, 0) then
+    -- if tuner window is already visible, we're being asked to toggle it off
+      reaper.TrackFX_Show(track, 0, 2)
+      return
   end
-  -- we record arm here, because if we're refloating the window, there's a chance
-  -- some other operation has unarmed the track
+  reaper.TrackFX_Show(track, 0, 3) -- float tuner window
+  -- We record arm here, because in the case where we refloat an existing tuner, 
+  -- the tuner track could have been become unarmed since the last time we used it.
   reaper.SetMediaTrackInfo_Value(track, "I_RECARM", 1)
+  -- restore focus to the arrange view so hotkeys (like a tuner toggle) can work
+  reaper.SetCursorContext(0, null)
 end
 
 reaper.Undo_BeginBlock()
