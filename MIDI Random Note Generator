@@ -1,0 +1,86 @@
+desc:Random MIDI Note Generator
+
+slider1:min_note=36<0,127,1>Min note
+slider2:max_note=96<0,127,1>Max note
+slider3:min_delay=0.1<0.01,2,0.01>Min delay (s)
+slider4:max_delay=1<0.01,5,0.01>Max delay (s)
+slider5:min_duration=0.1<0.01,2,0.01>Min duration (s)
+slider6:max_duration=0.5<0.01,5,0.01>Max duration (s)
+slider7:min_velocity=50<1,127,1>Min velocity
+slider8:max_velocity=100<1,127,1>Max velocity
+slider9:allow_overlap=1<0,1,1{Off,On}>Allow overlap
+
+@init
+max_polyphony = 100; // max polyphony
+next_note_time = time_precise();
+note_count = 0;
+
+note_array = max_polyphony;
+velocity_array = max_polyphony * 2;
+note_off_time_array = max_polyphony * 3;
+
+@block
+current_time = time_precise();
+
+// Process each active note to check if it's time to turn it off
+i = 0;
+while (i < note_count) (
+    (current_time >= note_off_time_array[i]) ? (
+        // Send MIDI note-off event for this note
+        midisend(0, 0x80, note_array[i], 0);
+        
+        // Remove the note by shifting the rest of the notes down in the array
+        j = i;
+        while (j < note_count - 1) (
+            note_array[j] = note_array[j + 1];
+            velocity_array[j] = velocity_array[j + 1];
+            note_off_time_array[j] = note_off_time_array[j + 1];
+            j += 1;
+        );
+        
+        note_count -= 1;
+        continue; // Skip incrementing i to check the next element in the updated list
+    );
+    i += 1;
+);
+
+(current_time >= next_note_time) ? (
+    // Generate a random note, velocity, and duration within the specified ranges
+    note = min_note + rand() * (max_note - min_note + 1);
+    velocity = min_velocity + rand() * (max_velocity - min_velocity + 1);
+    note_duration = min_duration + rand() * (max_duration - min_duration);
+    note_off_time = current_time + note_duration;
+    
+    allow_overlap ? (
+        // If overlap is allowed, add this note to the arrays if there is space
+        (note_count < max_polyphony) ? (
+            note_array[note_count] = note;
+            velocity_array[note_count] = velocity;
+            note_off_time_array[note_count] = note_off_time;
+            note_count += 1;
+            
+            // Send MIDI note-on event for the new note
+            midisend(0, 0x90, note, velocity);
+        );
+    ) : (
+        // If overlap is not allowed, turn off any active note first
+        (note_count > 0) ? (
+            midisend(0, 0x80, note_array[0], 0);
+            note_count = 0;
+        );
+        
+        // Add the new note as the only active note
+        note_array[0] = note;
+        velocity_array[0] = velocity;
+        note_off_time_array[0] = note_off_time;
+        note_count = 1;
+        
+        // Send MIDI note-on event for the new note
+        midisend(0, 0x90, note, velocity);
+    );
+    
+    // Set the next note generation time using a random delay in seconds
+    next_delay = min_delay + rand() * (max_delay - min_delay);
+    next_note_time = current_time + next_delay;
+);
+
