@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <index version="1" name="Eric Tetz ReaPack repo">
     <category name="MIDI">
-        <reapack name="Random MIDI Note Generator" type="effect">
+        <reapack name="RandomMIDINoteGenerator.jsfx" type="effect">
             <version name="1.0.0">
                 <source>https://raw.githubusercontent.com/EricTetz/reaper/1ca98029fd03201ec9d2c81a6febb6a7c849bcf8/MIDI%20Random%20Note%20Generator</source>
             </version>
         </reapack>
     </category>
     <category name="Utility">
-        <reapack name="Open Tuner" type="script">
+        <reapack name="OpenTuner.lua" type="script">
             <version name="1.0.0">
                 <source>https://raw.githubusercontent.com/EricTetz/reaper/1ca98029fd03201ec9d2c81a6febb6a7c849bcf8/OpenTuner.lua</source>
             </version>
