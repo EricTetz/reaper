@@ -13,5 +13,11 @@
                 <source>https://raw.githubusercontent.com/EricTetz/reaper/1ca98029fd03201ec9d2c81a6febb6a7c849bcf8/OpenTuner.lua</source>
             </version>
         </reapack>
+        <reapack name="CreateSends.lua" type="script" desc="Create Sends">
+            <version name="1.0.0" author="Eric Tetz" time="2024-11-01T12:00:55Z">
+                <source>https://raw.githubusercontent.com/EricTetz/reaper/d1f2380cbd8766549c7ab1c6916694969e55a7b7/CreateSends.lua</source>
+            </version>
+        </reapack>
+        
     </category>
 </index>
