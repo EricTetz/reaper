@@ -3,7 +3,7 @@
     <category name="MIDI">
         <reapack name="RandomMIDINoteGenerator.jsfx" type="effect" desc="Random MIDI Note Generator">
             <version name="1.0.0" author="Eric Tetz" time="2024-11-01T12:00:55Z">
-                <source>https://raw.githubusercontent.com/EricTetz/reaper/1ca98029fd03201ec9d2c81a6febb6a7c849bcf8/MIDI%20Random%20Note%20Generator</source>
+                <source>https://raw.githubusercontent.com/EricTetz/reaper/1ca9802y9fd03201ec9d2c81a6febb6a7c849bcf8/MIDI%20Random%20Note%20Generator</source>
             </version>
         </reapack>
     </category>
@@ -16,6 +16,16 @@
         <reapack name="CreateSends.lua" type="script" desc="Create Sends">
             <version name="1.0.0" author="Eric Tetz" time="2024-11-01T12:00:55Z">
                 <source>https://raw.githubusercontent.com/EricTetz/reaper/d1f2380cbd8766549c7ab1c6916694969e55a7b7/CreateSends.lua</source>
+            </version>
+        </reapack>
+        <reapack name="EditWithMelodyne.lua" type="script" desc="Add Melodyne to track and float it">
+            <version name="1.0.0" author="Eric Tetz" time="2024-12-16T12:00:55Z">
+                <source>https://raw.githubusercontent.com/EricTetz/reaper/c7ad3f04b6a3a6ffc61ebe9eae24ddf18db424c2/EditWithMelodyne.lua</source>
+            </version>
+        </reapack>
+        <reapack name="PrintMelodyne.lua" type="script" desc="Print Melodyne to new take in selected media items">
+            <version name="1.0.0" author="Eric Tetz" time="2024-12-16T12:00:55Z">
+                <source>https://raw.githubusercontent.com/EricTetz/reaper/c7ad3f04b6a3a6ffc61ebe9eae24ddf18db424c2/PrintMelodyne.lua</source>
             </version>
         </reapack>
         
