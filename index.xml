@@ -24,10 +24,14 @@
             </version>
         </reapack>
         <reapack name="PrintMelodyne.lua" type="script" desc="Print Melodyne to new take in selected media items">
-            <version name="1.0.0" author="Eric Tetz" time="2024-12-16T12:00:55Z">
-                <source>https://raw.githubusercontent.com/EricTetz/reaper/c7ad3f04b6a3a6ffc61ebe9eae24ddf18db424c2/PrintMelodyne.lua</source>
+            <version name="1.0.1" author="Eric Tetz" time="2024-12-16T12:00:55Z">
+                <source>https://raw.githubusercontent.com/EricTetz/reaper/e69d9fe689a4286748ee7d9083dd960406124e13/PrintMelodyne.lua</source>
             </version>
         </reapack>
-        
+        <reapack name="ShowAvailableShortcuts.lua" type="script" desc="Show available shortcuts">
+            <version name="1.0.0" author="Eric Tetz" time="2024-12-16T12:00:55Z">
+                <source>https://raw.githubusercontent.com/EricTetz/reaper/40c0f10fb7681803cead2f2b9403a360f214320e/ShowAvailableShortcuts.lua</source>
+            </version>
+        </reapack>
     </category>
 </index>
