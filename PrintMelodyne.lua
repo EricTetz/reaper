@@ -1,30 +1,30 @@
 local targetEffect = 'Melodyne'
-local removeUntunedTake = false
-local removeMelodyneAfter = true -- otherwise just disable it
-local tunedTakeSuffix = ' tuned' -- set to nil for no renaming
-local tunedTakeColor = { 255, 255, 0 } -- {r,g,b}, or nil for no color
+local removeSourceTake = false
+local removeEffect = true -- otherwise just disable it
+local printedTakeSuffix = ' tuned' -- set to nil for no renaming
+local printedTakeColor = { 255, 255, 0 } -- {r,g,b}, or nil for no color
 
 --[[
-    Print tuning to selected media items. Made for Melodyne, but the target
-    effect is configurable (see above) in case it's useful for something else.
+    Print an specific effect to selected media items. Made for Melodyne, but
+    the target effect is configurable (see above) in case it's useful for something else.
 
-    Why? There are circumstances where Reaper or ARA2 screws up and you can
-    lose your tuning data (e.g. accidentally undo tuning, or delete a tuned
-    item, then redo fails to restore tuning work).  By printing it, you save
-    yourself from that heartache.
+    Why? There are several circumstances where Reaper/ARA2/you screw up and you can
+    lose your tuning data. For instance, you can add Melodyne, tune for a half-hour,
+    accidentally ctrl+z the Melodyne instance off the track, and it's all gone.
+    Reflexively printing your work can save you from that heartache.
 
-    This script will find all selected tracks containing an active Melodyne
-    instance. It will disable all effects other than Melodyne on those tracks,
-    print FX to selected media items on those track, restore all disabled
-    effects, then disable or delete Melodyne.
+    This script will find all selected tracks containing an active instances of
+    the target effect. It will disable all effects other than the target on
+    those tracks, print FX to selected media items on those track, restore all
+    disabled effects, then disable or delete the target effect.
 
-    If removeUntunedTake is true, the untuned take will be removed from the media item.
+    If removeSourceTake is true, the pre-fx take we just printed will be removed from the media item.
 
-    If removeMelodyneAfter is true, Melodyne is removed after printing, otherwise it's disabled.
+    If removeEffect is true, targetEffect is removed after printing, otherwise it's disabled.
 
-    If tunedTakeSuffix is not nil, the printed take will have that suffix added to its name.
+    If printedTakeSuffix is not nil, the printed take will have that suffix added to its name.
 
-    If tunedTakeColor is not nil, the printed take will be set to that color.
+    If printedTakeColor is not nil, the printed take will be set to that color.
 ]]
 
 -- Append a suffix to a name to make a new name.
@@ -57,7 +57,7 @@ function hasEnabledEffect(track, effectName)
 end
 
 -- returns:  t[track] = { item, ... }
-function getSelectedItemsOnTunedTracks()
+function getSelectedItemsOnTracksContainingTargetEffect()
     local mediaItemsByTrack = {}
     for i=0,reaper.CountSelectedMediaItems(0)-1 do
         local item = reaper.GetSelectedMediaItem(0, i)
@@ -88,17 +88,17 @@ function applyEffectsToSelectedTakesOnTrack(track, items, newNameSuffix)
 
     -- rename and/or color new takes
     for item, take in pairs(activeTakesByMediaItem) do
-        local tunedTake = reaper.GetActiveTake(item)
-        if tunedTakeSuffix then
-            local newName = smartRename(take.name, tunedTakeSuffix)
-            reaper.GetSetMediaItemTakeInfo_String(tunedTake, 'P_NAME', newName, true)
+        local printedTake = reaper.GetActiveTake(item)
+        if printedTakeSuffix then
+            local newName = smartRename(take.name, printedTakeSuffix)
+            reaper.GetSetMediaItemTakeInfo_String(printedTake, 'P_NAME', newName, true)
         end
-        if tunedTakeColor then
-            reaper.SetMediaItemTakeInfo_Value(tunedTake, 'I_CUSTOMCOLOR', reaper.ColorToNative(table.unpack(tunedTakeColor))|0x1000000)
+        if printedTakeColor then
+            reaper.SetMediaItemTakeInfo_Value(printedTake, 'I_CUSTOMCOLOR', reaper.ColorToNative(table.unpack(printedTakeColor))|0x1000000)
         end
     end
 
-    if removeUntunedTake then
+    if removeSourceTake then
         for item, take in pairs(activeTakesByMediaItem) do
             reaper.SetActiveTake(take.take)
         end
@@ -131,12 +131,12 @@ function restoreDisabledEffects(track, disabledFX)
 end
 
 function main()
-    for track, items in pairs(getSelectedItemsOnTunedTracks()) do
+    for track, items in pairs(getSelectedItemsOnTracksContainingTargetEffect()) do
         local disabledFX = setEnabledEffectsOffline(track)
-        applyEffectsToSelectedTakesOnTrack(track, items,' - tuned')
+        applyEffectsToSelectedTakesOnTrack(track, items, printedTakeSuffix)
         restoreDisabledEffects(track, disabledFX)
         local effectIndex = reaper.TrackFX_GetByName(track, targetEffect, false)
-        if removeMelodyneAfter then
+        if removeEffect then
             reaper.TrackFX_Delete(track, effectIndex)
         else
             reaper.TrackFX_SetEnabled(track, effectIndex, false)
