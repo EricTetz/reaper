@@ -1,14 +1,24 @@
+
 desc:Random MIDI Note Generator
 
 slider1:min_note=36<0,127,1>Min note
 slider2:max_note=96<0,127,1>Max note
-slider3:min_delay=0.1<0.01,2,0.01>Min delay (s)
-slider4:max_delay=1<0.01,5,0.01>Max delay (s)
-slider5:min_duration=0.1<0.01,2,0.01>Min duration (s)
-slider6:max_duration=0.5<0.01,5,0.01>Max duration (s)
-slider7:min_velocity=50<1,127,1>Min velocity
-slider8:max_velocity=100<1,127,1>Max velocity
-slider9:allow_overlap=1<0,1,1{Off,On}>Allow overlap
+
+slider3:min_delay=0.0<0.00,2,0.01>Min delay (s)
+slider4:min_delay_qn=1<0,16,0.25>Min delay (QN)
+ 
+slider5:max_delay=0<0.00,5,0.01>Max delay (s)
+slider6:max_delay_qn=4<0,16,0.25>Max delay (QN)
+
+slider7:min_duration=0.0<0.01,2,0.01>Min duration (s)
+slider8:min_duration_qn=1<0,16,0.25>Min duration (QN)
+
+slider9:max_duration=0<0.01,5,0.01>Max duration (s)
+slider10:max_duration_qn=4<0,16,0.25>Max duration (QN)
+
+slider11:min_velocity=50<1,127,1>Min velocity
+slider12:max_velocity=100<1,127,1>Max velocity
+slider13:allow_overlap=1<0,1,1{Off,On}>Allow overlap
 
 @init
 max_polyphony = 100; // max polyphony
@@ -21,6 +31,10 @@ note_off_time_array = max_polyphony * 3;
 
 @block
 current_time = time_precise();
+min_delay_time = min_delay + min_delay_qn*60/tempo;
+max_delay_time = max_delay + max_delay_qn*60/tempo;
+min_duration_time = min_duration + min_duration_qn*60/tempo;
+max_duration_time = max_duration + max_duration_qn*60/tempo;
 
 // Process each active note to check if it's time to turn it off
 i = 0;
@@ -48,7 +62,7 @@ while (i < note_count) (
     // Generate a random note, velocity, and duration within the specified ranges
     note = min_note + rand() * (max_note - min_note + 1);
     velocity = min_velocity + rand() * (max_velocity - min_velocity + 1);
-    note_duration = min_duration + rand() * (max_duration - min_duration);
+    note_duration = min_duration_time + rand() * (max_duration_time - min_duration_time);
     note_off_time = current_time + note_duration;
     
     allow_overlap ? (
@@ -80,7 +94,6 @@ while (i < note_count) (
     );
     
     // Set the next note generation time using a random delay in seconds
-    next_delay = min_delay + rand() * (max_delay - min_delay);
+    next_delay = min_delay_time + rand() * (max_delay_time - min_delay_time);
     next_note_time = current_time + next_delay;
 );
-
