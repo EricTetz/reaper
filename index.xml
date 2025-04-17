@@ -2,6 +2,9 @@
 <index version="1" name="Eric Tetz ReaPack repo">
     <category name="MIDI">
         <reapack name="RandomMIDINoteGenerator.jsfx" type="effect" desc="Random MIDI Note Generator">
+            <version name="1.0.1" author="Eric Tetz" time="2025-04-17T12:00:55Z">
+                <source>https://raw.githubusercontent.com/EricTetz/reaper/e9e75e8febd6a1c1c22ffd6fe22c633c9a7ad5c4/MIDI%20Random%20Note%20Generator</source>
+            </version>
             <version name="1.0.0" author="Eric Tetz" time="2024-11-01T12:00:55Z">
                 <source>https://raw.githubusercontent.com/EricTetz/reaper/1ca9802y9fd03201ec9d2c81a6febb6a7c849bcf8/MIDI%20Random%20Note%20Generator</source>
             </version>
