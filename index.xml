@@ -41,11 +41,14 @@
         <reapack name="StudioFadeOut.lua" type="script" desc="Studio Fade Out">
             <version name="1.0.0" author="Eric Tetz" time="2026-03-14T07:00:00Z">
                 <source main="main">https://raw.githubusercontent.com/EricTetz/reaper/0b9b041b147d3ec17d127b26f799bc65f5dac673/StudioFadeOut.lua</source>
-                <source type="effect">https://raw.githubusercontent.com/EricTetz/reaper/0b9b041b147d3ec17d127b26f799bc65f5dac673/StudioFadeOut.jsfx</source>
             </version>
             <version name="1.0.1" author="Eric Tetz" time="2026-03-14T08:12:00Z">
                 <source main="main">https://raw.githubusercontent.com/EricTetz/reaper/d9aebbe23852a37734db770156826ea18492c990/StudioFadeOut.lua</source>
-                <source type="effect">https://raw.githubusercontent.com/EricTetz/reaper/d9aebbe23852a37734db770156826ea18492c990/StudioFadeOut.jsfx</source>
+            </version>
+        </reapack>
+        <reapack name="StudioFadeOut.jsfx" type="effect" desc="Studio Fade Out (JSFX)">
+            <version name="1.0.1" author="Eric Tetz" time="2026-03-14T08:12:00Z">
+                <source>https://raw.githubusercontent.com/EricTetz/reaper/d9aebbe23852a37734db770156826ea18492c990/StudioFadeOut.jsfx</source>
             </version>
         </reapack>
     </category>
