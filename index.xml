@@ -39,11 +39,14 @@
     </category>
     <category name="Effects">
         <reapack name="StudioFadeOut.lua" type="script" desc="Studio Fade Out">
-            <version name="1.0.0" author="Eric Tetz" time="2026-03-14T07:00:00Z">
-                <source main="main">https://raw.githubusercontent.com/EricTetz/reaper/0b9b041b147d3ec17d127b26f799bc65f5dac673/StudioFadeOut.lua</source>
-                <source type="effect" file="StudioFadeOut.jsfx">https://raw.githubusercontent.com/EricTetz/reaper/0b9b041b147d3ec17d127b26f799bc65f5dac673/StudioFadeOut.jsfx</source>
-            </version>
-            <version name="1.0.1" author="Eric Tetz" time="2026-03-14T08:12:00Z">
+            <metadata>
+                <description><![CDATA[Port of Audacity's "Studio Fade Out" effect (by Steve Daulton).
+
+Unlike a simple volume fade, this applies a frequency-dependent fade: high frequencies fade before lows, giving the impression of sound receding into the distance. Uses a raised-cosine gain curve combined with a sweeping low-pass filter (full spectrum → 100 Hz).
+
+Usage: Select one or more media items, optionally set a time selection within them, then run from the Actions menu. The fade is applied only within the selected range (or the full item if no time selection exists).]]></description>
+            </metadata>
+            <version name="1.0" author="Eric Tetz" time="2026-03-14T08:12:00Z">
                 <source main="main">https://raw.githubusercontent.com/EricTetz/reaper/d9aebbe23852a37734db770156826ea18492c990/StudioFadeOut.lua</source>
                 <source type="effect" file="StudioFadeOut.jsfx">https://raw.githubusercontent.com/EricTetz/reaper/d9aebbe23852a37734db770156826ea18492c990/StudioFadeOut.jsfx</source>
             </version>
