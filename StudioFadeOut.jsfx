@@ -1,0 +1,97 @@
+desc:Studio Fade Out
+// Port of Audacity's "Studio Fade Out" by Steve Daulton.
+// Raised cosine gain curve + sweeping 1-pole low-pass filter (Nyquist → 100 Hz).
+// Designed to be applied as Take FX via the companion Lua script.
+//
+// License: GPL v2+
+
+slider1:fade_start=0<0,3600,0.001>Fade Start Offset (seconds)
+slider2:fade_dur=5<0.01,600,0.01>Fade Duration (seconds)
+
+@init
+
+// ── Named constants ──────────────────────────────────────────────
+LP_END_HZ            = 100;      // LP cutoff at end of fade
+MIN_DUR_FOR_FILTER   = 0.2;      // Below this, gain-only (no filter)
+MAX_CROSSFADE_SEC    = 0.5;      // Cap for the filter crossfade ramp
+TWO_PI               = 2 * $pi;
+
+sample_pos = 0;
+
+// Per-channel 1-pole LP filter state (up to 64 channels)
+memset(0, 0, 64);  // lp_state[ch] at memory offset 0..63
+
+@slider
+
+start_sample   = (fade_start * srate) | 0;
+fade_samples   = (fade_dur * srate) | 0;
+fade_samples   = max(fade_samples, 1);
+end_sample     = start_sample + fade_samples;
+nyquist_hz     = srate / 2;
+
+// Filter crossfade duration (in samples)
+xfade_sec      = min(fade_dur / 2, MAX_CROSSFADE_SEC);
+xfade_samples  = (xfade_sec * srate) | 0;
+xfade_samples  = max(xfade_samples, 1);
+
+@sample
+
+(sample_pos >= start_sample) ? (
+  // Past the start offset — either fading or silent
+  (sample_pos < end_sample) ? (
+    // ── Inside fade region ─────────────────────────────────────────
+    fade_pos = sample_pos - start_sample;
+    t = fade_pos / fade_samples;
+
+    // Raised cosine gain: 1→0
+    gain = 0.5 * (1 + cos($pi * t));
+
+    // Sweeping low-pass filter (only when duration ≥ 0.2 s)
+    (fade_dur >= MIN_DUR_FOR_FILTER) ? (
+
+      // Cutoff sweeps linearly from nyquist → LP_END_HZ
+      cutoff_hz = nyquist_hz + (LP_END_HZ - nyquist_hz) * t;
+      cutoff_hz = max(cutoff_hz, LP_END_HZ);
+
+      // 1-pole LP coefficient: α = 1 − e^(−2π·fc/sr)
+      alpha = 1 - exp(-TWO_PI * cutoff_hz / srate);
+
+      // Filter crossfade envelope (raised cosine, over xfade_samples)
+      //   f_blend ramps 0→1: how much of the filtered signal to use
+      (fade_pos < xfade_samples) ? (
+        xt = fade_pos / xfade_samples;
+        f_blend = 0.5 * (1 - cos($pi * xt));
+      ) : (
+        f_blend = 1;
+      );
+
+      // Process each channel
+      ch = 0;
+      loop(num_ch,
+        dry = spl(ch);
+
+        // 1-pole IIR: y[n] = y[n-1] + α·(x[n] − y[n-1])
+        lp_state = ch;  // memory address for this channel
+        lp_state[] += alpha * (dry - lp_state[]);
+        wet = lp_state[];
+
+        // Crossfade dry↔filtered, then apply gain
+        spl(ch) = gain * (dry + f_blend * (wet - dry));
+        ch += 1;
+      );
+
+    ) : (
+      // Short selection: gain-only, no filter
+      ch = 0;
+      loop(num_ch,
+        spl(ch) *= gain;
+        ch += 1;
+      );
+    );
+
+  );
+  // Past the fade region: passthrough (audio untouched)
+);
+// Before start_sample: passthrough (audio untouched)
+
+sample_pos += 1;
