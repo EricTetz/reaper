@@ -1,16 +1,22 @@
 -- @description Studio Fade Out
 -- @author etetz
--- @version 1.0
+-- @version 1.0.1
 -- @provides
 --   [effect] StudioFadeOut.jsfx
 -- @about
---   Port of Audacity's "Studio Fade Out" (by Steve Daulton).
---   Applies a raised-cosine gain curve combined with a sweeping
---   low-pass filter (Nyquist → 100 Hz) for a musical fade out
---   where high frequencies disappear before lows.
+--   # Studio Fade Out
 --
---   Select one or more media items, optionally set a time selection
---   within them, then run this script from the Actions menu.
+--   Port of Audacity's "Studio Fade Out" effect (by Steve Daulton).
+--
+--   Unlike a simple volume fade, this applies a frequency-dependent fade:
+--   high frequencies fade before lows, giving the impression of sound
+--   receding into the distance. Uses a raised-cosine gain curve combined
+--   with a sweeping low-pass filter (full spectrum → 100 Hz).
+--
+--   **Usage:** Select one or more media items, optionally set a time
+--   selection within them, then run from the Actions menu. The fade is
+--   applied only within the selected range (or the full item if no time
+--   selection exists).
 
 local JSFX_NAME   = "StudioFadeOut"   -- matches the desc: line in the JSFX
 local SCRIPT_NAME = "Studio Fade Out"
